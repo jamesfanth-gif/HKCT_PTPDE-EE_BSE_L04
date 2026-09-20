@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BSE L04 — Hydronic Systems (1) · 水力循環系統 (一)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>💧 BSE L04 — Hydronic Systems (1): Design, Pumps & Controls</h1>
+    <p>水力循環系統、管網水力計算、水泵曲線與控制閥門 · Lecture 4 · Building Services Engineering</p>
+    <p>25 條選擇題 + 5 條計算簡答題 · 12 幅 SCADA 工業級動態向量原理圖 · Bilingual 中英對照</p>
+  </header>
+
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-value" id="timer">90:00</div>
+      <div class="stat-label">Time Left / 剩餘時間</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="answeredCount">0/25</div>
+      <div class="stat-label">Answered / 已答題數</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value" id="scoreDisplay">-</div>
+      <div class="stat-label">Score / 測驗得分</div>
+    </div>
+    <div style="width:100%;">
+      <div class="progress-container"><div class="progress-fill" id="progressBar"></div></div>
+    </div>
+  </div>
+
+  <div class="result-panel" id="resultPanel">
+    <div class="score-circle" id="scoreCircle"><div class="score-text" id="finalScore">0%</div></div>
+    <div class="result-msg" id="resultMsg">Done!</div>
+    <div class="review-section" id="reviewSection"></div>
+    <div style="margin-top:20px;">
+      <button class="btn btn-secondary" onclick="location.reload()">Restart / 重新開始</button>
+    </div>
+  </div>
+
+  <nav class="tab-nav" id="tabNav">
+    <button class="tab-btn active" onclick="showSection('notes')">📚 Notes 筆記 (含 SCADA 原理圖)</button>
+    <button class="tab-btn" onclick="showSection('part1')">📋 MC (25)</button>
+    <button class="tab-btn" onclick="showSection('part2')">✏️ Short Q (5)</button>
+  </nav>
+
+  <!-- NOTES TAB -->
+  <section id="notesSection" class="section active">
+    <div class="intro-card">
+      <h3>👋 歡迎來到第四講！ / Welcome to Lecture 4!</h3>
+      <p>本講主題為 <strong>水力系統 (Hydronic Systems)</strong>，係中央空調熱能輸送嘅核心血管網絡。內容深入探討<strong>冷凍水、雙溫水與冷卻水系統、閉式循環/開式循環/直流海水系統</strong>、<strong>水流量與溫差熱力學平衡（每 kW 需 0.04345 kg/s）</strong>、<strong>管網阻力與流速限制（0.6–1.2 m/s 及 250 Pa/m 準則）</strong>、<strong>離心水泵結構與水泵-管網工況點分析</strong>、<strong>膨脹水箱（F&E Tank）防氣蝕原理</strong>、<strong>二通/三通調節閥與閥權度（Valve Authority）</strong>，以及<strong>污垢系數（Fouling Factor）對冷凍機提升力（Lift）與化學水處理之工程影響</strong>。每節均配搭 SCADA 動態原理圖！</p>
+    </div>
+
+    <div class="toc">
+      <h3>📑 Table of Contents / 課題目錄</h3>
+      <ol>
+        <li><a href="#t1">Hydronic System Classification by Usage / 按用途分類：冷凍水、雙溫水與冷卻水系統</a></li>
+        <li><a href="#t2">Operating Characteristics: Closed, Open & Once-Through / 閉式、開式循環與海水直流冷卻系統</a></li>
+        <li><a href="#t3">Chilled Water Flow Rate vs Temperature Difference / 蒸發器製冷量、溫差與水流量熱力學平衡</a></li>
+        <li><a href="#t4">Water Velocity, Sizing & Pressure Drop Limits / 水流速度控制、管徑選擇與 250 Pa/m 水力準則</a></li>
+        <li><a href="#t5">Piping Materials & Corrosion Resistance / 管網材質選用與耐腐蝕特性對比</a></li>
+        <li><a href="#t6">Centrifugal Pumps: Construction & Sizing / 雙吸中開泵、端吸泵結構與最不利環路揚程</a></li>
+        <li><a href="#t7">Pump Curves, System Curves & Operating Point / 水泵特性曲線、管網阻力曲線與工況點分析</a></li>
+        <li><a href="#t8">Pump Power & Cavitation Prevention (NPSH) / 水泵軸功率計算與淨正吸入水頭防氣蝕原理</a></li>
+        <li><a href="#t9">Feed & Expansion (F&E) Tanks / 開式高位膨脹水箱與閉式隔膜壓縮水箱</a></li>
+        <li><a href="#t10">Two-Way Modulating Valves & Energy Savings / 二通調節閥、單座/雙座閥與變流量節能機制</a></li>
+        <li><a href="#t11">Three-Way Valves, Kv Factor & Valve Authority / 三通混水/分流閥、流量系數 Kv 與閥權度 N</a></li>
+        <li><a href="#t12">System Accessories & Chemical Water Treatment / 管網必備附件、換熱器結垢與化學加藥裝置</a></li>
+      </ol>
+    </div>
+
+    <div id="notesContainer"></div>
+  </section>
+
+  <!-- MC TAB -->
+  <section id="part1Section" class="section">
+    <div class="intro-card">
+      <h3>📋 Multiple Choice Questions (25 題選擇題)</h3>
+      <p>題目涵蓋 Lecture 4 所有工程數值、管徑水力限值、水泵曲線特性、閥權度計算與水處理要求。點擊選項作答，最後按 <strong>Submit MC</strong> 查看詳細中英文解說與成績。</p>
+    </div>
+    <div id="mcContainer"></div>
+    <div class="action-btns">
+      <button class="btn btn-success" onclick="submitMC()">Submit MC / 提交並查看成績與解釋</button>
+    </div>
+  </section>
+
+  <!-- SHORT Q TAB -->
+  <section id="part2Section" class="section">
+    <div class="intro-card">
+      <h3>✏️ Short Answer Questions (5 題計算與工程分析簡答題)</h3>
+      <p>包含管網流量計算、水力循環對比、水泵氣蝕與 F&E 水箱功能、調節閥選型與壓縮機提升力分析。請先自行思考作答，再點擊按鈕查看 Model Answer 與評分要點。</p>
+    </div>
+    <div id="shortContainer"></div>
+    <div class="action-btns">
+      <button class="btn btn-primary" onclick="showAnswers()">Show All Answers / 顯示所有參考答案</button>
+    </div>
+  </section>
+</div>
+
+<button class="to-top" id="toTop" onclick="window.scrollTo({top:0, behavior:'auto'})" title="Back to top">↑</button>
+
+<script src="app.js"></script>
+</body>
+</html>
